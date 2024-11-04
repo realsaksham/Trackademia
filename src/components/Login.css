@@ -1,0 +1,49 @@
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.bg-gradient-to-r {
+    background: linear-gradient(to right, #3b82f6, #4f46e5); /* Replace with your gradient colors */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.login-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+    color: red;
+    margin: 0.5rem 0;
+}
+
+.footer {
+    padding: 1rem;
+    background: #f3f4f6;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
