@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 .App {
   text-align: center;
 }
@@ -35,4 +40,13 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Add smooth transitions for sidebar buttons */
+aside ul li {
+  transition: background-color 0.3s ease;
+}
+
+aside ul li:hover {
+  background-color: #5a67d8; /* Slightly lighter shade for hover */
 }

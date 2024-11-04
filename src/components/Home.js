@@ -1,33 +1,107 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../config/firebaseConfig'; // Adjust the import path as needed
+import { auth, db } from '../config/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-//import Header from './Header';
+import { doc, getDoc } from 'firebase/firestore';
 import StatsCard from './StatsCard';
 import Leaderboard from './Leaderboard';
 import Footer from './Footer';
+import Assignment from './Assignment.js';
+import Timetable from './Timetable.js';
+import '../App.css';
+import AssignmentList from './AssignmentList';
 
 const Home = () => {
   const [userName, setUserName] = useState('');
+  const [activeSection, setActiveSection] = useState('Stats'); // Track active view
 
   useEffect(() => {
-    // Listener to get the logged-in user
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUserName(user.displayName || 'User'); // Default to 'User' if no displayName
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUserName(userDoc.data().displayName || 'User');
+        } else {
+          setUserName('User');
+        }
       } else {
-        setUserName(''); // Clear name if no user is logged in
+        setUserName('');
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
+  // Render based on active section
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'Stats':
+        return (
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StatsCard title="Aura Points" value="2000" />
+            <StatsCard title="Completed Assignments" value="35" />
+            <StatsCard title="Current Ranking" value="#5" />
+          </section>
+        );
+      case 'Leaderboard':
+        return (
+          <section>
+            <h2 className="text-2xl font-semibold text-gray-800 text-center">Leaderboard</h2>
+            <Leaderboard />
+          </section>
+        );
+      case 'Assignments':
+        return <Assignment />; // Render Assignment component
+      case 'Timetable':
+        return <Timetable />; // Render Timetable component
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* <Header /> */}
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-indigo-700 text-white flex flex-col">
+        <div className="p-4 text-2xl font-bold">Trackademia</div>
+        <nav className="flex-grow">
+          <ul>
+            <li
+              onClick={() => setActiveSection('Stats')}
+              className={`p-4 cursor-pointer ${activeSection === 'Stats' ? 'bg-indigo-600' : ''}`}
+            >
+              Stats
+            </li>
+            <li
+              onClick={() => setActiveSection('Leaderboard')}
+              className={`p-4 cursor-pointer ${activeSection === 'Leaderboard' ? 'bg-indigo-600' : ''}`}
+            >
+              Leaderboard
+            </li>
+            <li
+              onClick={() => setActiveSection('Assignments')}
+              className={`p-4 cursor-pointer ${activeSection === 'Assignments' ? 'bg-indigo-600' : ''}`}
+            >
+              Assignments
+            </li>
+            <li
+              onClick={() => setActiveSection('Timetable')}
+              className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'bg-indigo-600' : ''}`}
+            >
+              Timetable
+            </li>
+            <li
+              onClick={() => setActiveSection('Timetable')}
+              className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'bg-indigo-600' : ''}`}
+            >
+              Course
+            </li>
+          </ul>
+        </nav>
+        <footer className="p-4 text-center">© 2024 Trackademia</footer>
+      </aside>
+
+      {/* Main Content */}
       <main className="flex-grow p-8 space-y-8">
-        {/* Welcome Section */}
         <section className="text-center">
           <h1 className="text-3xl font-bold text-gray-800">Welcome, {userName}!</h1>
           <p className="mt-2 text-gray-600 text-lg">
@@ -35,39 +109,8 @@ const Home = () => {
           </p>
         </section>
 
-        {/* Stats Section */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatsCard title="Aura Points" value="2000" />
-          <StatsCard title="Completed Assignments" value="35" />
-          <StatsCard title="Current Ranking" value="#5" />
-        </section>
-
-        {/* Leaderboard Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-gray-800 text-center">Leaderboard</h2>
-          <Leaderboard />
-        </section>
-
-        {/* Additional Information Section */}
-        <section className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-semibold text-gray-800">Upcoming Assignments</h3>
-          <ul className="mt-4 space-y-2 text-left text-gray-700">
-            <li className="flex justify-between">
-              <span>Math Assignment</span>
-              <span className="font-bold">Due: Nov 10</span>
-            </li>
-            <li className="flex justify-between">
-              <span>Science Project</span>
-              <span className="font-bold">Due: Nov 12</span>
-            </li>
-            <li className="flex justify-between">
-              <span>History Essay</span>
-              <span className="font-bold">Due: Nov 15</span>
-            </li>
-          </ul>
-        </section>
+        {renderActiveSection()} {/* Conditionally render based on the selected section */}
       </main>
-      <Footer />
     </div>
   );
 };
