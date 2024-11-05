@@ -9,7 +9,7 @@ import Header from './components/Header'; // Import your Header component
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null); // Store user information
-
+// dikh raha h kya
   useEffect(() => {
     // Set up Firebase authentication listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
