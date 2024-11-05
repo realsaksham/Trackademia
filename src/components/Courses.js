@@ -6,7 +6,7 @@ const Courses = () => {
   const [courseName, setCourseName] = useState('');
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [selectedCourseName, setSelectedCourseName] = useState(''); // State to store selected course name
+  const [selectedCourseName, setSelectedCourseName] = useState(''); // Store selected course name
   const [chapters, setChapters] = useState([]);
   const [newChapter, setNewChapter] = useState('');
 
@@ -71,8 +71,10 @@ const Courses = () => {
       };
 
       try {
-        const chapterRef = await addDoc(collection(db, 'users', userId, 'courses', selectedCourseId, 'chapters'), newChapterData);
-        setChapters(prev => [...prev, { id: chapterRef.id, ...newChapterData }]);
+        await addDoc(collection(db, 'users', userId, 'courses', selectedCourseId, 'chapters'), newChapterData);
+        
+        // Update local chapters state after adding the chapter to Firestore
+        setChapters(prev => [...prev, newChapterData]);
         setNewChapter(''); // Clear input after adding chapter
       } catch (error) {
         console.error("Error adding chapter: ", error);
