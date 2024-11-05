@@ -1,17 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { auth, db } from '../config/firebaseConfig';
+import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 
-const Timetable = ({ timetable }) => (
-    <div>
-      <h2>Weekly Timetable</h2>
-      {timetable.map(entry => (
-        <div key={entry.id}>
-          <h3>{entry.courseName}</h3>
-          <p>{entry.day}: {entry.time}</p>
-        </div>
-      ))}
-    </div>
-  );
+const Timetable = ()=>{
+    
+}
 
-  export default Timetable;
+export default Timetable;
 
   

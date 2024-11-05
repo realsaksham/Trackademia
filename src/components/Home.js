@@ -9,6 +9,7 @@ import Assignment from './Assignment.js';
 import Timetable from './Timetable.js';
 import '../App.css';
 import AssignmentList from './AssignmentList';
+import Courses from './Courses.js'
 
 const Home = () => {
   const [userName, setUserName] = useState('');
@@ -53,6 +54,8 @@ const Home = () => {
         return <Assignment />; // Render Assignment component
       case 'Timetable':
         return <Timetable />; // Render Timetable component
+      case 'Courses':
+        return <Courses/>;
       default:
         return null;
     }
@@ -90,10 +93,10 @@ const Home = () => {
               Timetable
             </li>
             <li
-              onClick={() => setActiveSection('Timetable')}
+              onClick={() => setActiveSection('Courses')}
               className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'bg-indigo-600' : ''}`}
             >
-              Course
+              Courses
             </li>
           </ul>
         </nav>
