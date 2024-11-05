@@ -3,6 +3,9 @@ import { auth, googleProvider, githubProvider, db } from '../config/firebaseConf
 import { signInWithEmailAndPassword, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import './Login.css'; // Import your CSS file
+import googleLogo from '../img/googlelogo.png';
+import githubLogo from '../img/githublogo.png';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +15,7 @@ const Login = () => {
     const [displayName, setDisplayName] = useState('');
 
     const handleLogin = async (event) => {
-        event.preventDefault();
+        event.preventDefault();       
         setError(''); // Clear previous errors
         try {
             await signInWithEmailAndPassword(auth, email, password);
@@ -141,11 +144,11 @@ const Login = () => {
 
                   <div className="space-y-2">
                       <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center px-4 py-2 text-gray-600 bg-white border rounded-md shadow-sm hover:bg-gray-50">
-                          <img src="../img/googlelogo.png" alt="Google" className="w-5 h-5 mr-2" />
+                          <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2" />
                           Sign in with Google
                       </button>
                       <button onClick={handleGithubLogin} className="w-full flex items-center justify-center px-4 py-2 text-gray-600 bg-white border rounded-md shadow-sm hover:bg-gray-50">
-                          <img src="../img/githublogo.png" alt="GitHub" className="w-5 h-5 mr-2" />
+                          <img src={githubLogo} alt="GitHub" className="w-5 h-5 mr-2" />
                           Sign in with GitHub
                       </button>
                   </div>
