@@ -9,6 +9,7 @@ const Assignment = ({ onAuraPointsUpdated }) => {
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
   // Fetch assignments from Firestore on component mount
+  //ayush ka push
   useEffect(() => {
     const fetchAssignments = async () => {
       if (userId) {
