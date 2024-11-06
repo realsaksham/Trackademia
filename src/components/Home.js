@@ -4,41 +4,54 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import StatsCard from './StatsCard';
 import Leaderboard from './Leaderboard';
-import Footer from './Footer';
 import Assignment from './Assignment.js';
 import Timetable from './Timetable.js';
-import '../App.css';
-import AssignmentList from './AssignmentList';
-import Courses from './Courses.js'
+import Courses from './Courses.js';
 
 const Home = () => {
   const [userName, setUserName] = useState('');
-  const [activeSection, setActiveSection] = useState('Stats'); // Track active view
+  const [auraPoints, setAuraPoints] = useState(0);
+  const [activeSection, setActiveSection] = useState('Stats');
+
+  // Fetch AURA-POINTS from Firestore
+  const fetchAuraPoints = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        setAuraPoints(userDoc.data().auraPoints || 0);
+      }
+    }
+  };
 
   useEffect(() => {
+    fetchAuraPoints();
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           setUserName(userDoc.data().displayName || 'User');
+          // setAuraPoints(userDoc.data().auraPoints || 0);
         } else {
           setUserName('User');
+          // setAuraPoints(0);
         }
       } else {
         setUserName('');
+        setAuraPoints(0);
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Render based on active section
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'Stats':
         return (
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatsCard title="Aura Points" value="2000" />
+            <StatsCard title="Aura Points" value={auraPoints} />
             <StatsCard title="Completed Assignments" value="35" />
             <StatsCard title="Current Ranking" value="#5" />
           </section>
@@ -51,11 +64,11 @@ const Home = () => {
           </section>
         );
       case 'Assignments':
-        return <Assignment />; // Render Assignment component
+        return <Assignment onAuraPointsUpdated={fetchAuraPoints} />;
       case 'Timetable':
-        return <Timetable />; // Render Timetable component
+        return <Timetable />;
       case 'Courses':
-        return <Courses/>;
+        return <Courses />;
       default:
         return null;
     }
@@ -94,7 +107,7 @@ const Home = () => {
             </li>
             <li
               onClick={() => setActiveSection('Courses')}
-              className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'bg-indigo-600' : ''}`}
+              className={`p-4 cursor-pointer ${activeSection === 'Courses' ? 'bg-indigo-600' : ''}`}
             >
               Courses
             </li>

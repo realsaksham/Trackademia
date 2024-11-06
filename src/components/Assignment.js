@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, increment } from 'firebase/firestore';
 
-const Assignment = () => {
+const Assignment = ({ onAuraPointsUpdated }) => {
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [assignments, setAssignments] = useState([]);
-  const userId = auth.currentUser ? auth.currentUser.uid : null; // Get the current user's ID
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
 
   // Fetch assignments from Firestore on component mount
   useEffect(() => {
@@ -31,13 +31,13 @@ const Assignment = () => {
       const newAssignment = {
         title,
         dueDate,
-        status: 'Pending', // Assign default status as Pending
+        status: 'Pending',
       };
 
       try {
         await addDoc(collection(db, 'users', userId, 'assignments'), newAssignment);
         setAssignments(prev => [...prev, newAssignment]);
-        setTitle(''); // Clear input after submit
+        setTitle('');
         setDueDate('');
       } catch (error) {
         console.error("Error adding assignment: ", error);
@@ -45,18 +45,26 @@ const Assignment = () => {
     }
   };
 
-  // Mark assignment as completed
+  // Mark assignment as completed and update AURA-POINTS
   const markAsCompleted = async (assignmentId) => {
-    const assignmentRef = doc(db, 'users', userId, 'assignments', assignmentId);
-    try {
-      await updateDoc(assignmentRef, { status: 'Completed' });
-      setAssignments(prev =>
-        prev.map(assignment =>
-          assignment.id === assignmentId ? { ...assignment, status: 'Completed' } : assignment
-        )
-      );
-    } catch (error) {
-      console.error("Error updating assignment: ", error);
+    if (assignmentId && userId) {
+      const assignmentRef = doc(db, 'users', userId, 'assignments', assignmentId);
+      const userRef = doc(db, 'users', userId);
+  
+      try {
+        // Mark the assignment as completed
+        await updateDoc(assignmentRef, { status: 'Completed' });
+  
+        // Increment AURA-POINTS by 3
+        await updateDoc(userRef, { auraPoints: increment(3) });
+  
+        // Notify Home component to refresh aura points
+        onAuraPointsUpdated(); // Ensure this is passed correctly to the component
+  
+        console.log("Assignment marked as completed and AURA-POINTS updated");
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
     }
   };
 

@@ -37,8 +37,9 @@ const Login = () => {
             // Use user.uid as the document ID in Firestore
             await setDoc(doc(db, "users", user.uid), {
                 email: user.email,
-                displayName: displayName, // Add a default displayName or retrieve it from user input
+                displayName: displayName,
                 createdAt: new Date(),
+                auraPoints: 0, // Initialize AURA-POINTS
             });
 
             console.log("User signed up and data saved to Firestore:", user);
