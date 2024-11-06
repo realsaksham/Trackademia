@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -12,8 +12,9 @@ const Home = () => {
   const [userName, setUserName] = useState('');
   const [auraPoints, setAuraPoints] = useState(0);
   const [activeSection, setActiveSection] = useState('Stats');
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const sidebarRef = useRef(null);  // Ref for the sidebar
 
-  // Fetch AURA-POINTS from Firestore
   const fetchAuraPoints = async () => {
     const user = auth.currentUser;
     if (user) {
@@ -32,10 +33,8 @@ const Home = () => {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           setUserName(userDoc.data().displayName || 'User');
-          // setAuraPoints(userDoc.data().auraPoints || 0);
         } else {
           setUserName('User');
-          // setAuraPoints(0);
         }
       } else {
         setUserName('');
@@ -44,6 +43,18 @@ const Home = () => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    // Close sidebar when clicking outside of it
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const renderActiveSection = () => {
@@ -59,7 +70,7 @@ const Home = () => {
       case 'Leaderboard':
         return (
           <section>
-            <h2 className="text-2xl font-semibold text-gray-800 text-center">Leaderboard</h2>
+            <h2 className="text-2xl font-semibold text-white text-center">Leaderboard</h2>
             <Leaderboard />
           </section>
         );
@@ -75,57 +86,71 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-black text-white flex">
+      <button 
+        onMouseEnter={() => setSidebarVisible(!sidebarVisible)} // Toggle visibility on hover
+        className="text-black tracking-widest  bg-transparent hover:bg-[#616467] hover: transition duration-200"
+      >
+        {sidebarVisible ? '--' : '--'}
+      </button>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-indigo-700 text-white flex flex-col">
-        <div className="p-4 text-2xl font-bold">Trackademia</div>
-        <nav className="flex-grow">
-          <ul>
-            <li
-              onClick={() => setActiveSection('Stats')}
-              className={`p-4 cursor-pointer ${activeSection === 'Stats' ? 'bg-indigo-600' : ''}`}
-            >
-              Stats
-            </li>
-            <li
-              onClick={() => setActiveSection('Leaderboard')}
-              className={`p-4 cursor-pointer ${activeSection === 'Leaderboard' ? 'bg-indigo-600' : ''}`}
-            >
-              Leaderboard
-            </li>
-            <li
-              onClick={() => setActiveSection('Assignments')}
-              className={`p-4 cursor-pointer ${activeSection === 'Assignments' ? 'bg-indigo-600' : ''}`}
-            >
-              Assignments
-            </li>
-            <li
-              onClick={() => setActiveSection('Timetable')}
-              className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'bg-indigo-600' : ''}`}
-            >
-              Timetable
-            </li>
-            <li
-              onClick={() => setActiveSection('Courses')}
-              className={`p-4 cursor-pointer ${activeSection === 'Courses' ? 'bg-indigo-600' : ''}`}
-            >
-              Courses
-            </li>
-          </ul>
-        </nav>
-        <footer className="p-4 text-center">© 2024 Trackademia</footer>
-      </aside>
+      {sidebarVisible && (
+        <aside
+          ref={sidebarRef}  // Set the ref to the sidebar
+          className="w-64 bg-[#000000] text-white flex flex-col absolute top-0 left-0 h-full z-20 p-4"
+        >
+          <nav className="flex-grow">
+            <ul>
+              <li
+                onClick={() => { setActiveSection('Stats'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Stats' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Stats
+              </li>
+              <li
+                onClick={() => { setActiveSection('Leaderboard'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Leaderboard' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Leaderboard
+              </li>
+              <li
+                onClick={() => { setActiveSection('Assignments'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Assignments' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Assignments
+              </li>
+              <li
+                onClick={() => { setActiveSection('Timetable'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Timetable' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Timetable
+              </li>
+              <li
+                onClick={() => { setActiveSection('Courses'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Courses' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Courses
+              </li>
+            </ul>
+          </nav>
+          <footer className="text-center text-gray-400 mt-4">© 2024 Trackademia</footer>
+        </aside>
+      )}
 
       {/* Main Content */}
       <main className="flex-grow p-8 space-y-8">
-        <section className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Welcome, {userName}!</h1>
-          <p className="mt-2 text-gray-600 text-lg">
-            Track your performance and aim for the top!
-          </p>
-        </section>
+        {/* Conditionally render the welcome section */}
+        {activeSection === 'Stats' && (
+          <section className="text-center">
+            <h1 className="text-3xl font-bold text-white">Welcome, {userName}!</h1>
+            <p className="mt-2 text-gray-400 text-lg">
+              Track your performance and aim for the top!
+            </p>
+          </section>
+        )}
 
-        {renderActiveSection()} {/* Conditionally render based on the selected section */}
+        {renderActiveSection()}
       </main>
     </div>
   );

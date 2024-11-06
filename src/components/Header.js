@@ -14,24 +14,42 @@ const Header = ({ user, onLogout }) => {
   };
 
   return (
-    <header className="flex items-center justify-between p-4 bg-white shadow-md">
+    <header className="flex items-center justify-between p-4 bg-[#000000] shadow-md">
       <div className="flex items-center space-x-3">
         <img src="/path-to-your-logo.png" alt="Trackademia Logo" className="w-10 h-10" />
-        <h1 className="text-xl font-bold text-indigo-600">Trackademia</h1>
+        <h1 className="text-2xl font-bold text-white">TRACKADEMIA</h1>
       </div>
+      
       <nav className="space-x-4">
-        <a href="#" className="text-gray-600 hover:text-indigo-600">Home</a>
-        <a href="#" className="text-gray-600 hover:text-indigo-600">About</a>
-        <a href="#" className="text-gray-600 hover:text-indigo-600">Contact</a>
-        {user ? (
-          <>
-            <span className="text-gray-600">Welcome, {user.email}</span>
-            <button onClick={handleLogout} className="text-red-500 hover:text-red-700">
-              Logout
-            </button>
-          </>
-        ) : (
-          <a href="/login" className="text-gray-600 hover:text-indigo-600">Login</a>
+        {/* Home Button */}
+        <button className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200">
+          Home
+        </button>
+
+        {/* About Button */}
+        <button className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200">
+          About
+        </button>
+
+        {/* Contact Button */}
+        <button className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200">
+          Contact
+        </button>
+
+        {/* Login Button */}
+        {!user && (
+          <button 
+            onClick={() => navigate('/login')} 
+            className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200">
+            Login
+          </button>
+        )}
+
+        {/* Conditional Logout Button */}
+        {user && (
+          <button onClick={handleLogout} className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-[#654cf4] hover:bg-transparent hover:text-white dark:text-neutral-200 transition duration-200">
+            Logout
+          </button>
         )}
       </nav>
     </header>

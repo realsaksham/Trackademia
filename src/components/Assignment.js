@@ -73,7 +73,7 @@ const Assignment = ({ onAuraPointsUpdated }) => {
   const completedAssignments = assignments.filter(assignment => assignment.status === 'Completed');
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg">
+    <div className="p-6 bg-[#1A1A1D] shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Add New Assignment</h2>
       <div className="mb-4">
         <label className="block text-gray-700">Title</label>
