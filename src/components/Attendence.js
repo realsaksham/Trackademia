@@ -37,14 +37,14 @@ const Attendence = ({ onAuraPointsUpdated }) => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Mark Attendance</h2>
+    <div className="p-6 bg-black text-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold mb-6 border-b border-white pb-2">Mark Attendance</h2>
       {courses.map(course => (
-        <div key={course.id} className="mb-4 p-3 border rounded">
+        <div key={course.id} className="mb-4 p-4 border border-white rounded-lg">
           <h3 className="text-lg font-bold">{course.name}</h3>
           <button
             onClick={markAttendance}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+            className="mt-3 px-4 py-2 rounded bg-purple-600 text-white transition-all duration-200 hover:bg-purple-500 hover:shadow-[0_0_10px_#d3b8ff] focus:outline-none"
           >
             I am present
           </button>
