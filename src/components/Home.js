@@ -7,10 +7,12 @@ import Leaderboard from './Leaderboard';
 import Assignment from './Assignment.js';
 import Timetable from './Timetable.js';
 import Courses from './Courses.js';
+import Attendence from './Attendence.js';
 
 const Home = () => {
   const [userName, setUserName] = useState('');
   const [auraPoints, setAuraPoints] = useState(0);
+  const [present,setPresent] = useState(0);
   const [activeSection, setActiveSection] = useState('Stats');
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);  // Ref for the sidebar
@@ -24,9 +26,19 @@ const Home = () => {
       }
     }
   };
+  const fetchAttendence = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        setPresent(userDoc.data().attendance || 0);
+      }
+    }
+  };
 
   useEffect(() => {
     fetchAuraPoints();
+    fetchAttendence();
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -63,8 +75,9 @@ const Home = () => {
         return (
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatsCard title="Aura Points" value={auraPoints} />
+            <StatsCard title="Attendence" value={present} />
             <StatsCard title="Completed Assignments" value="35" />
-            <StatsCard title="Current Ranking" value="#5" />
+            {/* <StatsCard title="Current Ranking" value="#5" /> */}
           </section>
         );
       case 'Leaderboard':
@@ -80,6 +93,8 @@ const Home = () => {
         return <Timetable />;
       case 'Courses':
         return <Courses />;
+      case 'Attendence':
+        return <Attendence onAuraPointsUpdated={fetchAuraPoints} />;
       default:
         return null;
     }
@@ -131,6 +146,12 @@ const Home = () => {
                 className={`p-4 cursor-pointer ${activeSection === 'Courses' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
               >
                 Courses
+              </li>
+              <li
+                onClick={() => { setActiveSection('Attendence'); setSidebarVisible(false); }}
+                className={`p-4 cursor-pointer ${activeSection === 'Attendence' ? 'text-white bg-zinc-900 rounded-xl' : 'text-gray-600'}`}
+              >
+                Attendence
               </li>
             </ul>
           </nav>

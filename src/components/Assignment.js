@@ -96,8 +96,9 @@ const markAsCompleted = async (assignmentId, courseId) => {
     } catch (error) {
       console.error("Error updating document: ", error);
     }
+    window.location.reload();
   }
-};
+}
 
 
   const currentAssignments = assignments.filter(assignment => assignment.status === 'Pending');

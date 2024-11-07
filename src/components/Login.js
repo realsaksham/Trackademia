@@ -40,6 +40,7 @@ const Login = () => {
                 displayName: displayName,
                 createdAt: new Date(),
                 auraPoints: 0, // Initialize AURA-POINTS
+                attendance:0,
             });
 
             console.log("User signed up and data saved to Firestore:", user);
