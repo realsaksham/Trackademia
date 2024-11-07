@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 const Courses = () => {
   const [courseName, setCourseName] = useState('');
+  const [courseCredit, setCourseCredit] = useState('');
   const [courses, setCourses] = useState([]);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [selectedCourseName, setSelectedCourseName] = useState(''); // Store selected course name
-  const [chapters, setChapters] = useState([]);
-  const [newChapter, setNewChapter] = useState('');
 
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
@@ -31,69 +28,20 @@ const Courses = () => {
 
   // Add new course to Firestore
   const addCourse = async () => {
-    if (courseName && userId) {
+    if (courseName && courseCredit && userId) {
       const newCourse = {
         name: courseName,
-        chapters: [], // Initialize with empty chapters
+        credit: courseCredit,
       };
 
       try {
         const docRef = await addDoc(collection(db, 'users', userId, 'courses'), newCourse);
         setCourses(prev => [...prev, { id: docRef.id, ...newCourse }]);
         setCourseName(''); // Clear input after submit
+        setCourseCredit(''); // Clear input after submit
       } catch (error) {
         console.error("Error adding course: ", error);
       }
-    }
-  };
-
-  // Fetch chapters for selected course
-  const fetchChapters = async (courseId, courseName) => {
-    if (courseId) {
-      const chaptersCollection = collection(db, 'users', userId, 'courses', courseId, 'chapters');
-      const chapterSnapshot = await getDocs(chaptersCollection);
-      const chapterList = chapterSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setChapters(chapterList);
-      setSelectedCourseId(courseId);
-      setSelectedCourseName(courseName); // Set the selected course name
-    }
-  };
-
-  // Add a new chapter to the selected course
-  const addChapter = async () => {
-    if (newChapter && selectedCourseId) {
-      const newChapterData = {
-        name: newChapter,
-        completed: false, // Default completed status
-      };
-
-      try {
-        await addDoc(collection(db, 'users', userId, 'courses', selectedCourseId, 'chapters'), newChapterData);
-        
-        // Update local chapters state after adding the chapter to Firestore
-        setChapters(prev => [...prev, newChapterData]);
-        setNewChapter(''); // Clear input after adding chapter
-      } catch (error) {
-        console.error("Error adding chapter: ", error);
-      }
-    }
-  };
-
-  // Toggle chapter completion status
-  const toggleChapterCompletion = async (chapterId, currentStatus) => {
-    const chapterRef = doc(db, 'users', userId, 'courses', selectedCourseId, 'chapters', chapterId);
-    try {
-      await updateDoc(chapterRef, { completed: !currentStatus });
-      setChapters(prev =>
-        prev.map(chapter =>
-          chapter.id === chapterId ? { ...chapter, completed: !currentStatus } : chapter
-        )
-      );
-    } catch (error) {
-      console.error("Error updating chapter status: ", error);
     }
   };
 
@@ -110,6 +58,20 @@ const Courses = () => {
           placeholder="Enter Course Name"
         />
       </div>
+      <div className="mb-4">
+        <label className="block text-gray-700">Course Credit</label>
+        <input
+          type="text"
+          value={courseCredit}
+          onChange={(e) => {
+            // Only allow numeric input
+            if (/^\d*$/.test(e.target.value)) setCourseCredit(e.target.value);
+          }}
+          inputMode="numeric"
+          className="mt-1 p-2 border border-gray-300 rounded w-full"
+          placeholder="Enter Course Credit"
+        />
+      </div>
       <button
         onClick={addCourse}
         className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
@@ -118,55 +80,13 @@ const Courses = () => {
       </button>
 
       <h2 className="text-xl font-semibold mt-8">Your Courses</h2>
-      <select
-        value={selectedCourseId || ''}
-        onChange={(e) => {
-          const selectedCourse = courses.find(course => course.id === e.target.value);
-          fetchChapters(e.target.value, selectedCourse.name);
-        }}
-        className="mt-2 p-2 border border-gray-300 rounded w-full"
-      >
-        <option value="">Select a Course</option>
+      <ul>
         {courses.map(course => (
-          <option key={course.id} value={course.id}>
-            {course.name}
-          </option>
+          <li key={course.id} className="mb-2">
+            <span className="font-bold">{course.name}</span> - Credit: {course.credit}
+          </li>
         ))}
-      </select>
-
-      {selectedCourseId && (
-        <>
-          <h2 className="text-xl font-semibold mt-8">Chapters for: {selectedCourseName}</h2>
-          <div className="mb-4">
-            <label className="block text-gray-700">Add Chapter</label>
-            <input
-              type="text"
-              value={newChapter}
-              onChange={(e) => setNewChapter(e.target.value)}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
-              placeholder="Enter Chapter Name"
-            />
-          </div>
-          <button
-            onClick={addChapter}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-          >
-            Add Chapter
-          </button>
-
-          {chapters.map(chapter => (
-            <div key={chapter.id} className="mb-4 flex items-center">
-              <input
-                type="checkbox"
-                checked={chapter.completed}
-                onChange={() => toggleChapterCompletion(chapter.id, chapter.completed)}
-                className="mr-2"
-              />
-              <span className={chapter.completed ? 'line-through' : ''}>{chapter.name}</span>
-            </div>
-          ))}
-        </>
-      )}
+      </ul>
     </div>
   );
 };
