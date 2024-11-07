@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc,getDocs,collection ,query,where} from 'firebase/firestore';
 import StatsCard from './StatsCard';
 import Leaderboard from './Leaderboard';
 import Assignment from './Assignment.js';
@@ -13,9 +13,11 @@ const Home = () => {
   const [userName, setUserName] = useState('');
   const [auraPoints, setAuraPoints] = useState(0);
   const [present,setPresent] = useState(0);
+  const [assignments, setAssignments] = useState([]);
   const [activeSection, setActiveSection] = useState('Stats');
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);  // Ref for the sidebar
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
 
   const fetchAuraPoints = async () => {
     const user = auth.currentUser;
@@ -35,10 +37,29 @@ const Home = () => {
       }
     }
   };
+  const fetchAssignments = async () => {
+    if (userId) {
+      const assignmentsCollection = collection(db, 'users', userId, 'assignments');
+      const completedAssignmentsQuery = query(assignmentsCollection, where('status', '==', 'Completed'));
+  
+      try {
+        const assignmentSnapshot = await getDocs(completedAssignmentsQuery);
+        const completedAssignmentList = assignmentSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAssignments(completedAssignmentList);
+      } catch (error) {
+        console.error("Error fetching completed assignments: ", error);
+      }
+    }
+  };
+
 
   useEffect(() => {
     fetchAuraPoints();
     fetchAttendence();
+    fetchAssignments();
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -76,7 +97,7 @@ const Home = () => {
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatsCard title="Aura Points" value={auraPoints} />
             <StatsCard title="Attendence" value={present} />
-            <StatsCard title="Completed Assignments" value="35" />
+            <StatsCard title="Completed Assignments" value={assignments.length} />
             {/* <StatsCard title="Current Ranking" value="#5" /> */}
           </section>
         );
