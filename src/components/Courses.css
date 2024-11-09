@@ -1,0 +1,174 @@
+/* Container and button styles */
+.courses-container {
+    padding: 1.5rem;
+    background-color: #121212; /* Darker background */
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 1rem; /* More rounded edges */
+    display: flex;
+    justify-content: space-between; /* Space out left and right sections */
+    gap: 2rem; /* Add space between left and right sections */
+}
+
+/* Left Section - Add Course */
+.add-course-section {
+    flex: 1; /* Take up equal space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Right Section - Display Courses */
+.courses-list-section {
+    flex: 1; /* Take up equal space */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Header style for 'Your Courses' */
+.courses-header {
+    font-size: 2rem; /* Make text larger */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #C3A8F2; /* Light color for contrast */
+    text-align: left;
+    width: 100%;
+    padding-left: 1rem;
+}
+
+/* Form Container */
+.form-container {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container {
+    margin-bottom: 1rem;
+}
+
+.input-label {
+    display: block;
+    color: white;
+}
+
+.input-field {
+    margin-top: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid #444;
+    border-radius: 1rem; /* More rounded edges */
+    background-color: #1e1e1e; /* Darker background */
+    color: white;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.input-field:hover {
+    border-color: #C3A8F2;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #C3A8F2;
+}
+
+/* Updated button style */
+.add-course-btn {
+    padding: 0.75rem 2rem;
+    background-color: #2d2d2d; /* Slightly lighter matte color */
+    border: none;
+    color: white;
+    border-radius: 0.75rem; /* More rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 0 3px #333;
+    width: 30%;
+    max-width: 600px;
+    margin: 0.5rem;
+    cursor: pointer;
+}
+
+.add-course-btn:hover {
+    transform: translateY(-0.25rem);
+    background-color: #3a3a3a; /* Slightly lighter */
+    color: white;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Display Courses */
+.courses-list-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 1.25rem;
+}
+
+.courses-list {
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.course-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #444;
+    border-radius: 1rem; /* More rounded edges */
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 600px;
+    background-color: #1e1e1e; /* Dark background */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.course-item:hover {
+    background-color: #252525; /* Slightly lighter background */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15); /* 3D pop effect */
+}
+
+.course-item .course-name,
+.course-item .course-credit {
+    font-weight: bold;
+    color: #C3A8F2; /* Light color for contrast */
+    margin-bottom: 0.5rem;
+}
+
+.course-item button {
+    background-color: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem; /* More rounded edges */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin-top: 1rem;
+}
+
+.course-item button:hover {
+    background-color: #2a2435;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Dark mode specific styles */
+.dark .courses-container {
+    background-color: #1e1e1e;
+}
+
+.dark .input-field,
+.dark .course-item {
+    background-color: #121212; /* Dark background */
+    color: white;
+    border-color: #444;
+}
+
+.dark .input-field:focus,
+.dark .course-item button:hover {
+    border-color: #C3A8F2;
+    background-color: #333;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
-import { collection, addDoc, getDocs, updateDoc, doc, increment, getDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, increment, getDoc, deleteDoc } from 'firebase/firestore';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import calendar from '../assets/calender.png';
+import './Assignment.css'
 
 const Assignment = ({ onAuraPointsUpdated }) => {
   const [title, setTitle] = useState('');
@@ -98,68 +100,86 @@ const Assignment = ({ onAuraPointsUpdated }) => {
     }
   };
 
+  // Delete Assignment Function
+  const deleteAssignment = async (assignmentId) => {
+    if (!assignmentId || !userId) return;
+
+    const assignmentRef = doc(db, 'users', userId, 'assignments', assignmentId);
+
+    try {
+      await deleteDoc(assignmentRef);
+      setAssignments(prevAssignments =>
+        prevAssignments.filter(assignment => assignment.id !== assignmentId)
+      );
+    } catch (error) {
+      console.error("Error deleting assignment: ", error);
+    }
+  };
+
   // Filtered assignment lists
   const currentAssignments = assignments.filter(assignment => assignment.status === 'Pending');
   const completedAssignments = assignments.filter(assignment => assignment.status === 'Completed');
 
   return (
-    <div className="p-6 bg-[#1A1A1D] text-white shadow-md rounded-lg">
+    <div className="assignment-container">
       <h2 className="text-2xl font-semibold mb-4">Add New Assignment</h2>
 
-      <div className="mb-4">
-        <label className="block">Course</label>
-        <select
-          value={selectedCourseId}
-          onChange={(e) => setSelectedCourseId(e.target.value)}
-          className="mt-1 p-2 border border-white rounded w-full bg-transparent text-white placeholder-gray-400 hover:border-[#C3A8F2] focus:outline-none transition-all"
-        >
-          <option value="">Select a Course</option>
-          {courses.map(course => (
-            <option key={course.id} value={course.id}>
-              {course.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <div className="assignment-form-container">
+  <select
+    value={selectedCourseId}
+    onChange={(e) => setSelectedCourseId(e.target.value)}
+    className="course-select"
+  >
+    <option value="">Select a Course</option>
+    {courses.map(course => (
+      <option key={course.id} value={course.id}>
+        {course.name}
+      </option>
+    ))}
+  </select>
 
-      <div className="mb-4">
-        <label className="block">Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 p-2 border border-white rounded w-full bg-transparent text-white placeholder-gray-400 hover:border-[#C3A8F2] focus:outline-none transition-all"
-          placeholder="Assignment Title"
+  <input
+    type="text"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+    className="assignment-title-input"
+    placeholder="Assignment Title"
+  />
+
+  <DatePicker
+    selected={dueDate}
+    onChange={(date) => setDueDate(date)}
+    showTimeSelect
+    minDate={new Date()}
+    dateFormat="Pp"
+    customInput={
+      <button className="date-picker-button">
+        <img 
+          src={calendar}
+          alt="calendar icon" 
+          className="calendar-icon" 
         />
-      </div>
-
-      <div className="mb-4">
-        <label className="block">Due Date and Time</label>
-        <DatePicker
-          selected={dueDate}
-          onChange={(date) => setDueDate(date)}
-          showTimeSelect
-          minDate={new Date()}
-          dateFormat="Pp"
-          className="mt-1 p-2 border border-white rounded w-full bg-transparent text-white placeholder-gray-400 hover:border-[#C3A8F2] focus:outline-none transition-all"
-        />
-      </div>
-
-      <button
-        onClick={addAssignment}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-[#C3A8F2] hover:shadow-xl transition-all"
-      >
-        Add Assignment
       </button>
+    }
+  />
+
+  <button
+    onClick={addAssignment}
+    className="add-assignment-btn"
+  >
+    Add
+  </button>
+</div>
+
 
       <h2 className="text-xl font-semibold mt-8">Current Assignments</h2>
       {currentAssignments.map((assignment) => (
-        <div key={assignment.id} className="mb-4 p-3 border border-white rounded hover:bg-[#C3A8F2] hover:shadow-lg transition-all">
-          <h3 className="text-lg font-bold">{assignment.title}</h3>
+        <div key={assignment.id} className="assignment-item">
+          <h3 className="assignment-title">{assignment.title}</h3>
           <p>Due: {new Date(assignment.dueDate).toLocaleString()}</p>
           <button
             onClick={() => markAsCompleted(assignment.id, assignment.courseId)}
-            className="bg-green-500 text-white px-2 py-1 rounded hover:bg-[#C3A8F2] transition-all"
+            className="submit-button"
           >
             Submit
           </button>
@@ -168,9 +188,15 @@ const Assignment = ({ onAuraPointsUpdated }) => {
 
       <h2 className="text-xl font-semibold mt-8">Completed Assignments</h2>
       {completedAssignments.map((assignment) => (
-        <div key={assignment.id} className="mb-4 p-3 border border-white rounded hover:bg-[#C3A8F2] hover:shadow-lg transition-all">
-          <h3 className="text-lg font-bold">{assignment.title}</h3>
+        <div key={assignment.id} className="assignment-item">
+          <h3 className="assignment-title">{assignment.title}</h3>
           <p>Due: {new Date(assignment.dueDate).toLocaleString()}</p>
+          <button
+            onClick={() => deleteAssignment(assignment.id)}
+            className="delete-button"
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>

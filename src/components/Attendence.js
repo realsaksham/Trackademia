@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { collection, doc, updateDoc, increment, onSnapshot } from 'firebase/firestore';
-
+import './Attendence.css'
 const Attendence = ({ onAuraPointsUpdated }) => {
   const [courses, setCourses] = useState([]);
   const [feedback, setFeedback] = useState("");
@@ -59,9 +59,9 @@ const Attendence = ({ onAuraPointsUpdated }) => {
   };
 
   return (
-    <div className="p-6 bg-black text-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-6 border-b border-white pb-2">Mark Attendance</h2>
-      {feedback && <p className="mb-4 text-green-400">{feedback}</p>}
+    <div className="attendance-container">
+      <h2 className="attendance-header">Mark Attendance</h2>
+      {feedback && <p className="feedback-message">{feedback}</p>}
       {courses.map(course => {
         const attended = course.attended || 0;
         const absent = course.absent || 0;
@@ -69,22 +69,24 @@ const Attendence = ({ onAuraPointsUpdated }) => {
         const attendancePercentage = totalLectures > 0 ? ((attended / totalLectures) * 100).toFixed(2) : 0;
 
         return (
-          <div key={course.id} className="mb-4 p-4 border border-white rounded-lg">
-            <h3 className="text-lg font-bold">{course.name}</h3>
-            <p>Lectures Attended: {attended}</p>
-            <p>Attendance Percentage: {attendancePercentage}%</p>
-            <button
-              onClick={() => updateAttendance(course.id, 'attended')}
-              className="mt-3 px-4 py-2 mr-2 rounded bg-green-600 text-white transition-all duration-200 hover:bg-green-500 hover:shadow-[0_0_10px_#a3e635] focus:outline-none"
-            >
-              Attended
-            </button>
-            <button
-              onClick={() => updateAttendance(course.id, 'absent')}
-              className="mt-3 px-4 py-2 rounded bg-red-600 text-white transition-all duration-200 hover:bg-red-500 hover:shadow-[0_0_10px_#f87171] focus:outline-none"
-            >
-              Absent
-            </button>
+          <div key={course.id} className="course-item">
+            <h3 className="course-name">{course.name}</h3>
+            <p className="attendance-info">Lectures Attended: {attended}</p>
+            <p className="attendance-info">Attendance Percentage: {attendancePercentage}%</p>
+            <div className="buttons-container">
+              <button
+                onClick={() => updateAttendance(course.id, 'attended')}
+                className="attendance-btn attended-btn"
+              >
+                Attended
+              </button>
+              <button
+                onClick={() => updateAttendance(course.id, 'absent')}
+                className="attendance-btn absent-btn"
+              >
+                Absent
+              </button>
+            </div>
           </div>
         );
       })}

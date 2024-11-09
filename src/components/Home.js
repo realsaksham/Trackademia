@@ -6,18 +6,17 @@ import Sidebar from './Sidebar';
 import Stats from './Stats';
 import Leaderboard from './Leaderboard';
 import Assignment from './Assignment.js';
-import Timetable from './Timetable.js';
 import Courses from './Courses.js';
 import Attendence from './Attendence.js';
 import AssignmentAlert from './AssignmentAlert';
-
+import Card from './Card.js'; // Import the Card component
 
 const Home = () => {
   const [userName, setUserName] = useState('');
   const [auraPoints, setAuraPoints] = useState(0);
   const [present, setPresent] = useState(0);
   const [assignments, setAssignments] = useState([]);
-  const [activeSection, setActiveSection] = useState('Home'); // Set "Home" as the default active section
+  const [activeSection, setActiveSection] = useState('Home');
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
@@ -81,7 +80,6 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
-  // Handle mouse leave to hide sidebar
   const handleMouseLeave = () => {
     setSidebarVisible(false);
   };
@@ -99,8 +97,6 @@ const Home = () => {
         );
       case 'Assignments':
         return <Assignment onAuraPointsUpdated={fetchAuraPoints} />;
-      case 'Timetable':
-        return <Timetable />;
       case 'Courses':
         return <Courses />;
       case 'Attendence':
@@ -113,9 +109,14 @@ const Home = () => {
             <p className="mt-2 text-gray-400 text-lg">
               it's never been that easy to study 
             </p>
-           
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <Card title="Stats" onClick={() => setActiveSection('Stats')} />
+              <Card title="Leaderboard" onClick={() => setActiveSection('Leaderboard')} />
+              <Card title="Assignments" onClick={() => setActiveSection('Assignments')} />
+              <Card title="Courses" onClick={() => setActiveSection('Courses')} />
+              <Card title="Attendence" onClick={() => setActiveSection('Attendence')} />
+            </div>
           </section>
-          
         );
     }
   };
@@ -137,10 +138,9 @@ const Home = () => {
         setSidebarVisible={setSidebarVisible} 
         onMouseLeave={handleMouseLeave}
       />
-       <div>
-      <AssignmentAlert assignments={assignments} />
-      {/* other components and sections */}
-    </div>
+      <div>
+        <AssignmentAlert assignments={assignments} />
+      </div>
 
       <main className="flex-grow p-8 space-y-8">
         {renderActiveSection()}

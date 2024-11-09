@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
+import './Courses.css'; // Import the CSS file
 
 const Courses = () => {
   const [courseName, setCourseName] = useState('');
@@ -46,24 +47,22 @@ const Courses = () => {
   };
 
   return (
-    <div className="p-6 bg-black text-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Add Your Course</h2>
-
+    <div className="courses-container">
       {/* Course Name Input */}
-      <div className="mb-4">
-        <label className="block text-white">Course Name</label>
+      <div className="input-container">
+        <label className="input-label">Course Name</label>
         <input
           type="text"
           value={courseName}
           onChange={(e) => setCourseName(e.target.value)}
-          className="mt-1 p-2 border border-white rounded w-full bg-transparent text-white placeholder-gray-400 hover:border-[#C3A8F2] focus:outline-none transition-all"
+          className="input-field"
           placeholder="Enter Course Name"
         />
       </div>
 
       {/* Course Credit Input */}
-      <div className="mb-4">
-        <label className="block text-white">Course Credit</label>
+      <div className="input-container">
+        <label className="input-label">Course Credit</label>
         <input
           type="text"
           value={courseCredit}
@@ -71,7 +70,7 @@ const Courses = () => {
             if (/^\d*$/.test(e.target.value)) setCourseCredit(e.target.value);
           }}
           inputMode="numeric"
-          className="mt-1 p-2 border border-white rounded w-full bg-transparent text-white placeholder-gray-400 hover:border-[#C3A8F2] focus:outline-none transition-all"
+          className="input-field"
           placeholder="Enter Course Credit"
         />
       </div>
@@ -79,17 +78,17 @@ const Courses = () => {
       {/* Add Course Button */}
       <button
         onClick={addCourse}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-[#C3A8F2] hover:shadow-xl transition-all"
+        className="add-course-btn"
       >
         Add Course
       </button>
 
       {/* Display Courses */}
-      <h2 className="text-xl font-semibold mt-8">Your Courses</h2>
-      <ul className="mt-4 space-y-2">
+      <h2 className="courses-list-header">Your Courses</h2>
+      <ul className="courses-list">
         {courses.map(course => (
-          <li key={course.id} className="p-3 border border-white rounded hover:bg-[#C3A8F2] hover:shadow-lg transition-all">
-            <span className="font-bold">{course.name}</span> - Credit: {course.credit}
+          <li key={course.id} className="course-item">
+            <span className="course-name">{course.name}</span> - Credit: {course.credit}
           </li>
         ))}
       </ul>

@@ -1,0 +1,283 @@
+/* Container and button styles */
+.assignment-container {
+    padding: 1.5rem;
+    background-color: #121212; /* Darker background */
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 1rem; /* More rounded edges */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Updated button style */
+.assignment-button {
+    padding: 0.75rem 2rem;
+    background-color: #2d2d2d; /* Slightly lighter matte color */
+    border: none;
+    color: white;
+    border-radius: 0.75rem; /* More rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 0 3px #333;
+    display: inline-block;
+    margin: 0.5rem;
+    cursor: pointer;
+}
+
+.assignment-button:hover {
+    transform: translateY(-0.25rem);
+    background-color: #3a3a3a; /* Slightly lighter */
+    color: white;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+.dark .assignment-button {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.dark .assignment-button:hover {
+    background-color: #4a4a4a;
+    color: black;
+}
+
+/* Form Container */
+.form-container {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-container select,
+.form-container input,
+.form-container .react-datepicker-wrapper input {
+    margin-top: 0.5rem;
+    padding: 0.75rem; /* Added more padding for better touch */
+    border: 1px solid #444;
+    border-radius: 1rem; /* More rounded edges */
+    width: 100%;
+    background-color: #1e1e1e; /* Darker background */
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.form-container select:focus,
+.form-container input:focus {
+    outline: none;
+    border-color: #c3a8f2;
+}
+
+/* Submit Button */
+.submit-button {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem; /* More rounded */
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #c3a8f2;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Assignment item styles */
+.assignment-item {
+    margin-bottom: 1rem;
+    padding: 1rem; /* More padding for a more spacious feel */
+    border: 1px solid #444;
+    border-radius: 1rem; /* More rounded edges */
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 600px;
+    background-color: #1e1e1e; /* Dark background */
+}
+
+.assignment-item:hover {
+    background-color: #252525; /* Slightly lighter background */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15); /* 3D pop effect */
+}
+
+.assignment-item button {
+    background-color: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem; /* More rounded edges */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.assignment-item button:hover {
+    background-color: #2a2435;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Specific styles for the Add Assignment section */
+.add-assignment-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 800px;
+    justify-content: center;
+}
+
+.add-assignment-container .form-container {
+    width: 100%;
+}
+
+.add-assignment-container select,
+.add-assignment-container .input-title,
+.add-assignment-container .add-btn {
+    border-radius: 1rem; /* More rounded edges */
+    padding: 1rem;
+    background-color: #1e1e1e; /* Darker background */
+    border: 1px solid #444;
+    color: white;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.add-assignment-container select:focus,
+.add-assignment-container .input-title:focus {
+    border-color: #c3a8f2;
+}
+
+.add-assignment-container .add-btn {
+    background-color: #f8b234;
+    color: black;
+    font-weight: bold;
+    border-radius: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.add-assignment-container .add-btn:hover {
+    background-color: #f3a31c;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Specific styles for Date Picker */
+.date-picker-btn {
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.date-picker-btn .date-picker-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+/* Container for the select, input, DatePicker, and button */
+.assignment-form-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Select Course */
+.assignment-form-container select {
+    flex: 0.5;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid #444;
+    color: rgb(255, 255, 255);
+    border-radius: 1rem; /* More rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 0 3px #333;
+}
+
+.assignment-form-container select:focus {
+    outline: none;
+    border-color: #c3a8f2;
+}
+
+/* Title Input */
+.assignment-form-container input {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid #444;
+    color: rgb(255, 255, 255);
+    border-radius: 1rem; /* More rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 0 3px #333;
+}
+
+.assignment-form-container input:focus {
+    outline: none;
+    border-color: #c3a8f2;
+}
+
+/* Date Picker Button */
+.assignment-form-container .react-datepicker-wrapper button {
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 1rem; /* Rounded edges */
+    transition: all 0.3s ease;
+}
+
+.assignment-form-container .react-datepicker-wrapper button:hover {
+    transform: translateY(-0.25rem);
+    background-color: #333;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+.assignment-form-container .react-datepicker-wrapper img {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+/* Add Button */
+.assignment-form-container button {
+    flex: 0.5;
+    padding: 0.75rem 1.5rem;
+    background-color: #f8b234;
+    border: 1px solid #f8b234;
+    color: black;
+    border-radius: 1rem; /* Rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.assignment-form-container button:hover {
+    transform: translateY(-0.25rem);
+    background-color: #f3a31c;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Dark mode specific styles */
+.dark .assignment-form-container select,
+.dark .assignment-form-container input,
+.dark .assignment-form-container button,
+.dark .react-datepicker-wrapper button {
+    background-color: #1e1e1e; /* Dark background */
+    color: white;
+    border-color: #444;
+}
+
+.dark .assignment-form-container select:focus,
+.dark .assignment-form-container input:focus,
+.dark .assignment-form-container button:hover,
+.dark .react-datepicker-wrapper button:hover {
+    border-color: #c3a8f2;
+    background-color: #333;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
