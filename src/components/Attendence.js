@@ -1,35 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
-import { collection, getDocs, doc, updateDoc, increment } from 'firebase/firestore';
+import { collection, doc, updateDoc, increment, onSnapshot } from 'firebase/firestore';
 
 const Attendence = ({ onAuraPointsUpdated }) => {
   const [courses, setCourses] = useState([]);
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      if (userId) {
-        const coursesCollection = collection(db, 'users', userId, 'courses');
-        const courseSnapshot = await getDocs(coursesCollection);
-        const coursesList = courseSnapshot.docs.map(doc => ({
+    if (userId) {
+      const coursesCollection = collection(db, 'users', userId, 'courses');
+
+      // Set up a real-time listener
+      const unsubscribe = onSnapshot(coursesCollection, (snapshot) => {
+        const coursesList = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
         setCourses(coursesList);
-      }
-    };
-    fetchCourses();
+      });
+
+      // Clean up the listener on component unmount
+      return () => unsubscribe();
+    }
   }, [userId]);
 
-  // comment for push 
-
-  const markAttendance = async () => {
+  const updateAttendance = async (courseId, type) => {
     if (userId) {
-      const userRef = doc(db, 'users', userId);
+      const courseRef = doc(db, 'users', userId, 'courses', courseId);
       try {
-        await updateDoc(userRef, {
-          attendance: increment(1),
-          auraPoints: increment(1),
+        const fieldToUpdate = type === 'attended' ? 'attended' : 'absent';
+        await updateDoc(courseRef, {
+          [fieldToUpdate]: increment(1),
+          auraPoints: increment(type === 'attended' ? 1 : 0), // Increment aura points only for attended
         });
         onAuraPointsUpdated(); // Update aura points in Home
       } catch (error) {
@@ -41,17 +43,32 @@ const Attendence = ({ onAuraPointsUpdated }) => {
   return (
     <div className="p-6 bg-black text-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-6 border-b border-white pb-2">Mark Attendance</h2>
-      {courses.map(course => (
-        <div key={course.id} className="mb-4 p-4 border border-white rounded-lg">
-          <h3 className="text-lg font-bold">{course.name}</h3>
-          <button
-            onClick={markAttendance}
-            className="mt-3 px-4 py-2 rounded bg-purple-600 text-white transition-all duration-200 hover:bg-purple-500 hover:shadow-[0_0_10px_#d3b8ff] focus:outline-none"
-          >
-            I am present
-          </button>
-        </div>
-      ))}
+      {courses.map(course => {
+        const attended = course.attended || 0;
+        const absent = course.absent || 0;
+        const totalLectures = attended + absent;
+        const attendancePercentage = totalLectures > 0 ? ((attended / totalLectures) * 100).toFixed(2) : 0;
+
+        return (
+          <div key={course.id} className="mb-4 p-4 border border-white rounded-lg">
+            <h3 className="text-lg font-bold">{course.name}</h3>
+            <p>Lectures Attended: {attended}</p>
+            <p>Attendance Percentage: {attendancePercentage}%</p>
+            <button
+              onClick={() => updateAttendance(course.id, 'attended')}
+              className="mt-3 px-4 py-2 mr-2 rounded bg-green-600 text-white transition-all duration-200 hover:bg-green-500 hover:shadow-[0_0_10px_#a3e635] focus:outline-none"
+            >
+              Attended
+            </button>
+            <button
+              onClick={() => updateAttendance(course.id, 'absent')}
+              className="mt-3 px-4 py-2 rounded bg-red-600 text-white transition-all duration-200 hover:bg-red-500 hover:shadow-[0_0_10px_#f87171] focus:outline-none"
+            >
+              Absent
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 };
