@@ -25,7 +25,7 @@ const Assignment = ({ onAuraPointsUpdated }) => {
     };
 
     fetchCourses();
-  }, [userId]);
+  }, []);
 
   // Fetch assignments from Firestore on component mount
   useEffect(() => {
@@ -42,7 +42,7 @@ const Assignment = ({ onAuraPointsUpdated }) => {
     };
 
     fetchAssignments();
-  }, [userId]);
+  }, []);
 
   // Add new assignment to Firestore
   const addAssignment = async () => {
