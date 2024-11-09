@@ -88,7 +88,7 @@ const Courses = () => {
       <ul className="courses-list">
         {courses.map(course => (
           <li key={course.id} className="course-item">
-            <span className="course-name">{course.name}</span> - Credit: {course.credit}
+            <span className="course-name">{course.name}</span> {course.credit}
           </li>
         ))}
       </ul>

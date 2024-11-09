@@ -18,7 +18,7 @@ const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVi
     sidebarVisible && (
       <aside
         ref={sidebarRef}
-        className="w-64 flex flex-col absolute top-0 left-0 h-full z-20 p-4 transform transition-transform duration-300 ease-in-out"
+        className="w-64 flex flex-col absolute top-0 left-0 h-screen z-20 p-4 transform transition-transform duration-300 ease-in-out"
         style={{
           backgroundColor: '#1a1a1a', // Dark gray for a softer black theme
           transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
@@ -26,7 +26,7 @@ const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVi
       >
         <nav className="flex-grow">
           <ul>
-            {['Home', 'Stats', 'Leaderboard', 'Assignments', 'Timetable', 'Courses', 'Attendence'].map((section) => (
+            {['Home', 'Stats', 'Leaderboard', 'Assignments', 'Courses', 'Attendence'].map((section) => (
               <li
                 key={section}
                 onClick={() => { setActiveSection(section); setSidebarVisible(false); }}
