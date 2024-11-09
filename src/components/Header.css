@@ -1,0 +1,60 @@
+/* Header.css */
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: #000000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo-image {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .header-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .header-nav {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .header-button {
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #616467;
+    border-radius: 9999px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  
+  .header-button:hover {
+    background-color: #616467;
+    color: #ffffff;
+  }
+  
+  .logout-button {
+    background-color: #654cf4;
+  }
+  
+  .logout-button:hover {
+    background-color: transparent;
+    color: #ffffff;
+  }
+  

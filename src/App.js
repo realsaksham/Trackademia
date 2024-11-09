@@ -1,10 +1,12 @@
 // App.js
 import React, { useState, useEffect } from 'react';
+import About from './components/About';
 import { auth } from './config/firebaseConfig'; // Adjust the path as needed
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Home from './components/Home';
 import Header from './components/Header'; // Import your Header component
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,7 +15,7 @@ function App() {
   useEffect(() => {
     // Set up Firebase authentication listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAuthenticated(user); // Set to true if user exists
+      setIsAuthenticated(!!user); // Set to true if user exists, false otherwise
       setUser(user); // Update user state
     });
 
@@ -36,8 +38,11 @@ function App() {
       {/* Render Header component */}
       <Header user={user} onLogout={handleLogout} />
       <Routes>
-        {isAuthenticated ? (  
-          <Route path="/" element={<Home user={user} />} />
+        {isAuthenticated ? (
+          <>
+            <Route path="/" element={<Home user={user} />} />
+            <Route path="/about" element={<About />} />
+          </>
         ) : (
           <Route path="/login" element={<Login />} />
         )}
