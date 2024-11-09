@@ -6,7 +6,7 @@ import './About.css';
 // import prajjwalImage from '../assets/prajjwal.png';
 
 const About = () => {
-    const ayushImage = require('../assets/ayush.png');
+  const ayushImage = require('../assets/ayush.png');
 const sakshamImage = require('../assets/saksham.png');
 const prajjwalImage = require('../assets/prajjwal.png');
 

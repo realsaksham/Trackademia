@@ -9,6 +9,8 @@ import Assignment from './Assignment.js';
 import Timetable from './Timetable.js';
 import Courses from './Courses.js';
 import Attendence from './Attendence.js';
+import AssignmentAlert from './AssignmentAlert';
+
 
 const Home = () => {
   const [userName, setUserName] = useState('');
@@ -111,7 +113,9 @@ const Home = () => {
             <p className="mt-2 text-gray-400 text-lg">
               it's never been that easy to study 
             </p>
+           
           </section>
+          
         );
     }
   };
@@ -133,6 +137,10 @@ const Home = () => {
         setSidebarVisible={setSidebarVisible} 
         onMouseLeave={handleMouseLeave}
       />
+       <div>
+      <AssignmentAlert assignments={assignments} />
+      {/* other components and sections */}
+    </div>
 
       <main className="flex-grow p-8 space-y-8">
         {renderActiveSection()}

@@ -18,6 +18,7 @@
   .logo-image {
     width: 40px;
     height: 40px;
+    border-radius: 50%;
   }
   
   .header-title {
@@ -55,6 +56,62 @@
   
   .logout-button:hover {
     background-color: transparent;
-    color: #ffffff;
+    color: #f42e2e;
+  }
+  
+  .logout-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .alert-content {
+    background-color: #1a1a1d;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+  }
+  
+  .alert-message {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .alert-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .alert-button {
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+  
+  .confirm-button {
+    background-color: #ff4747;
+    color: white;
+  }
+  
+  .cancel-button {
+    background-color: #333;
+    color: white;
+  }
+  
+  .alert-button:hover {
+    opacity: 0.8;
   }
   
