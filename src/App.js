@@ -13,6 +13,7 @@ function App() {
   const [user, setUser] = useState(null); // Store user information
 
   useEffect(() => {
+    //checking push ..
     // Set up Firebase authentication listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user); // Set to true if user exists, false otherwise
