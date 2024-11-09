@@ -21,6 +21,8 @@ const Attendence = ({ onAuraPointsUpdated }) => {
     fetchCourses();
   }, [userId]);
 
+  // comment for push 
+
   const markAttendance = async () => {
     if (userId) {
       const userRef = doc(db, 'users', userId);

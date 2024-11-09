@@ -22,7 +22,10 @@ const Header = ({ user, onLogout }) => {
       
       <nav className="space-x-4">
         {/* Home Button */}
-        <button className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200">
+        <button 
+          onClick={() => navigate('/home')} // Add this line to handle redirection
+          className="shadow-[inset_0_0_0_2px_#616467] text-white px-8 py-3 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white dark:text-neutral-200 transition duration-200"
+        >
           Home
         </button>
 
