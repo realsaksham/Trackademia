@@ -9,7 +9,7 @@ const Assignment = ({ onAuraPointsUpdated }) => {
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const userId = auth.currentUser ? auth.currentUser.uid : null;
-
+  // added at 16:08pm 
   // Fetch courses from Firestore on component mount
   useEffect(() => {
     const fetchCourses = async () => {
@@ -55,8 +55,8 @@ const Assignment = ({ onAuraPointsUpdated }) => {
       };
 
       try {
-        await addDoc(collection(db, 'users', userId, 'assignments'), newAssignment);
-        setAssignments(prev => [...prev, newAssignment]);
+        const docRef = await addDoc(collection(db, 'users', userId, 'assignments'), newAssignment);
+        setAssignments(prev => [...prev, { ...newAssignment, id: docRef.id }]);
         setTitle('');
         setDueDate('');
         setSelectedCourseId('');
@@ -82,20 +82,28 @@ const Assignment = ({ onAuraPointsUpdated }) => {
 
           // Update the assignment status to 'Completed'
           await updateDoc(assignmentRef, { status: 'Completed' });
-          
+
           // Update the user's AURA-POINTS based on the course's credit
           await updateDoc(userRef, { auraPoints: increment(courseCredit) });
-          
+
+          // Update local state to reflect the changes without refreshing
+          setAssignments(prevAssignments =>
+            prevAssignments.map(assignment =>
+              assignment.id === assignmentId ? { ...assignment, status: 'Completed' } : assignment
+            )
+          );
+
           // Notify parent component about AURA-POINTS update
-          onAuraPointsUpdated();
+          if (onAuraPointsUpdated) {
+            onAuraPointsUpdated();
+          }
           console.log(`Assignment marked as completed and AURA-POINTS increased by ${courseCredit}`);
         } else {
-          console.error("Course not found");
+          console.error("Course not found Just edited for fun");
         }
       } catch (error) {
         console.error("Error updating document: ", error);
       }
-      window.location.reload();
     }
   };
 
@@ -106,7 +114,6 @@ const Assignment = ({ onAuraPointsUpdated }) => {
     <div className="p-6 bg-[#1A1A1D] text-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Add New Assignment</h2>
 
-      {/* Course Selection */}
       <div className="mb-4">
         <label className="block">Course</label>
         <select
