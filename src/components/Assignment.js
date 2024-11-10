@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { collection, addDoc, getDocs, updateDoc, doc, increment, getDoc, deleteDoc } from 'firebase/firestore';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import calendar from '../assets/calender.png';
-import './Assignment.css'
+import { Calendar } from 'primereact/calendar'; // Import Calendar from PrimeReact
+import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Import theme
+import 'primereact/resources/primereact.min.css'; // Import PrimeReact CSS
+import './Assignment.css';
+import { CascadeSelect } from 'primereact/cascadeselect';
 
 const Assignment = ({ onAuraPointsUpdated }) => {
   const [title, setTitle] = useState('');
@@ -120,57 +121,55 @@ const Assignment = ({ onAuraPointsUpdated }) => {
   const currentAssignments = assignments.filter(assignment => assignment.status === 'Pending');
   const completedAssignments = assignments.filter(assignment => assignment.status === 'Completed');
 
+  // Get current date and time for minDate and minTime
+  const now = new Date();
+  const minDate = now;
+  const minTime = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes since midnight
+
   return (
     <div className="assignment-container">
       <h2 className="text-2xl font-semibold mb-4">Add New Assignment</h2>
 
       <div className="assignment-form-container">
-  <select
-    value={selectedCourseId}
-    onChange={(e) => setSelectedCourseId(e.target.value)}
-    className="course-select"
-  >
-    <option value="">Select a Course</option>
-    {courses.map(course => (
-      <option key={course.id} value={course.id}>
-        {course.name}
-      </option>
-    ))}
-  </select>
+        <select
+          value={selectedCourseId}
+          onChange={(e) => setSelectedCourseId(e.target.value)}
+          className="course-select"
+        >
+          <option value="">Select a Course</option>
+          {courses.map(course => (
+            <option key={course.id} value={course.id}>
+              {course.name}
+            </option>
+          ))}
+        </select>
 
-  <input
-    type="text"
-    value={title}
-    onChange={(e) => setTitle(e.target.value)}
-    className="assignment-title-input"
-    placeholder="Assignment Title"
-  />
-
-  <DatePicker
-    selected={dueDate}
-    onChange={(date) => setDueDate(date)}
-    showTimeSelect
-    minDate={new Date()}
-    dateFormat="Pp"
-    customInput={
-      <button className="date-picker-button">
-        <img 
-          src={calendar}
-          alt="calendar icon" 
-          className="calendar-icon" 
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="assignment-title-input"
+          placeholder="Assignment Title"
         />
-      </button>
-    }
-  />
 
-  <button
-    onClick={addAssignment}
-    className="add-assignment-btn"
-  >
-    Add
-  </button>
-</div>
+        {/* PrimeReact Calendar for Due Date */}
+        <Calendar
+          value={dueDate}
+          onChange={(e) => setDueDate(e.value)} // Update dueDate on change
+          showTime
+          hourFormat="24" // 24-hour format
+          className="due-date-calendar"
+          minDate={minDate} // Set minimum date to now
+          minTime={minTime} // Set minimum time to now (in minutes since midnight)
+        />
 
+        <button
+          onClick={addAssignment}
+          className="add-assignment-btn"
+        >
+          Add
+        </button>
+      </div>
 
       <h2 className="text-xl font-semibold mt-8">Current Assignments</h2>
       {currentAssignments.map((assignment) => (
@@ -188,12 +187,12 @@ const Assignment = ({ onAuraPointsUpdated }) => {
 
       <h2 className="text-xl font-semibold mt-8">Completed Assignments</h2>
       {completedAssignments.map((assignment) => (
-        <div key={assignment.id} className="assignment-item">
+        <div key={assignment.id} className="mb-4 p-4 border border-gray-600 rounded-xl transition-all duration-300 ease-in-out w-full max-w-2xl bg-gray-900 hover:bg-gray-700 hover:shadow-lg">
           <h3 className="assignment-title">{assignment.title}</h3>
           <p>Due: {new Date(assignment.dueDate).toLocaleString()}</p>
           <button
             onClick={() => deleteAssignment(assignment.id)}
-            className="delete-button"
+            className="bg-red-500 text-white py-2 px-4 rounded-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-800 hover:shadow-xl"
           >
             Delete
           </button>

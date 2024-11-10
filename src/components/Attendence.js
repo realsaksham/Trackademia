@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig';
 import { collection, doc, updateDoc, increment, onSnapshot } from 'firebase/firestore';
-import './Attendence.css'
+import './Attendence.css';
+import { Chart } from 'primereact/chart';
+
 const Attendence = ({ onAuraPointsUpdated }) => {
   const [courses, setCourses] = useState([]);
   const [feedback, setFeedback] = useState("");
@@ -58,6 +60,31 @@ const Attendence = ({ onAuraPointsUpdated }) => {
     }
   };
 
+  const renderDoughnutChart = (attended, absent) => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const data = {
+      labels: ['Attended', 'Absent'],
+      datasets: [
+        {
+          data: [attended, absent],
+          backgroundColor: [
+            '#28a745', // Green for attended
+            '#dc3545'
+          ],
+          hoverBackgroundColor: [
+            '#218838', // Darker green for hover
+            '#c82333' 
+          ]
+        }
+      ]
+    };
+    const options = {
+      cutout: '60%',
+    };
+    
+    return <Chart type="doughnut" data={data} options={options} className="attendance-chart" />;
+  };
+
   return (
     <div className="attendance-container">
       <h2 className="attendance-header">Mark Attendance</h2>
@@ -87,6 +114,12 @@ const Attendence = ({ onAuraPointsUpdated }) => {
                 Absent
               </button>
             </div>
+
+            {/* Render the Doughnut chart for attendance */}
+            <div className="attendance-chart-container">
+              {renderDoughnutChart(attended, absent)}
+            </div>
+
           </div>
         );
       })}

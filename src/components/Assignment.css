@@ -108,10 +108,11 @@
     background-color: #10b981;
     color: white;
     padding: 0.5rem 1rem;
-    border-radius: 1rem; /* More rounded edges */
+    border-radius: 0.75rem; /* More rounded edges */
     transition: all 0.3s ease;
     cursor: pointer;
 }
+
 
 .assignment-item button:hover {
     background-color: #2a2435;
@@ -279,5 +280,36 @@
 .dark .react-datepicker-wrapper button:hover {
     border-color: #c3a8f2;
     background-color: #333;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+}
+
+/* Delete Button */
+.delete-button {
+    background-color: #e53e3e; /* Red color */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem; /* Rounded edges */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    box-shadow: inset 0 0 0 3px #b83232; /* Inner shadow for 3D effect */
+}
+
+.delete-button:hover {
+    background-color: #c53030; /* Darker red on hover */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
+    transform: translateY(-0.25rem); /* Pop-up effect */
+}
+
+/* Dark mode specific styles for Delete Button */
+.dark .delete-button {
+    background-color: #c53030;
+    color: white;
+    border: none;
+}
+
+.dark .delete-button:hover {
+    background-color: #9b2c2c;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 3D pop effect */
 }

@@ -3,7 +3,7 @@
 .about-container {
     text-align: center;
     padding: 2rem;
-    background-color: #f5f5f5;
+    background-color: #000000;
   }
   
   .about-title {
@@ -60,4 +60,5 @@
     font-size: 0.9rem;
     color: #666;
   }
+  
   

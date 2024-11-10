@@ -1,19 +1,17 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import About from './components/About';
 import { auth } from './config/firebaseConfig'; // Adjust the path as needed
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Home from './components/Home';
+import Pomodoro from './components/Pomodoro';  // Import Pomodoro component
 import Header from './components/Header'; // Import your Header component
-// open 
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null); // Store user information
 
   useEffect(() => {
-    //checking push ..
     // Set up Firebase authentication listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user); // Set to true if user exists, false otherwise
@@ -43,6 +41,7 @@ function App() {
           <>
             <Route path="/" element={<Home user={user} />} />
             <Route path="/about" element={<About />} />
+            <Route path="/pomodoro" element={<Pomodoro />} /> {/* Add Pomodoro route */}
           </>
         ) : (
           <Route path="/login" element={<Login />} />

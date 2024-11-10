@@ -23,7 +23,6 @@ const Leaderboard = () => {
 
   return (
     <div className="p-6 bg-[#121212] text-white shadow-lg rounded-xl flex flex-col items-center">
-     
       <ul className="w-full max-w-md space-y-4">
         {users.map((user, index) => (
           <li
@@ -31,7 +30,7 @@ const Leaderboard = () => {
             className="flex justify-between items-center bg-[#1e1e1e] border border-[#444] p-4 rounded-lg shadow-sm transition-all duration-300 hover:bg-[#252525] hover:shadow-lg"
           >
             <span className="text-xl">
-              {index + 1}. {user.displayName || 'Anonymous'}
+              {index + 1}. {user.displayName || 'Anonymous'}  {index === 0 ? '👑' : null} 
             </span>
             <span className="text-2xl font-semibold text-[#C3A8F2]">
               {user.auraPoints} points

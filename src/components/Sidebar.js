@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for routing
 
 const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVisible }) => {
   const sidebarRef = useRef(null);
@@ -18,7 +19,7 @@ const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVi
     sidebarVisible && (
       <aside
         ref={sidebarRef}
-        className="w-64 flex flex-col absolute top-0 left-0 h-screen z-20 p-4 transform transition-transform duration-300 ease-in-out"
+        className="w-64 flex flex-col absolute top-0 left-0 h-full z-20 p-4 transform transition-transform duration-300 ease-in-out"
         style={{
           backgroundColor: '#1a1a1a', // Dark gray for a softer black theme
           transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
@@ -26,7 +27,7 @@ const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVi
       >
         <nav className="flex-grow">
           <ul>
-            {['Home', 'Stats', 'Leaderboard', 'Assignments', 'Courses', 'Attendence'].map((section) => (
+            {['Home', 'Stats', 'Leaderboard', 'Assignments', 'Courses', 'Attendance'].map((section) => (
               <li
                 key={section}
                 onClick={() => { setActiveSection(section); setSidebarVisible(false); }}
@@ -40,6 +41,14 @@ const Sidebar = ({ activeSection, setActiveSection, sidebarVisible, setSidebarVi
             ))}
           </ul>
         </nav>
+        {/* Add Pomodoro Link */}
+        <Link
+          to="/pomodoro"
+          className="p-4 cursor-pointer transition-transform duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg mt-4 text-gray-300 hover:bg-purple-500 hover:text-white rounded-xl"
+          onClick={() => setSidebarVisible(false)} // Close sidebar when clicking
+        >
+          Pomodoro
+        </Link>
         <footer className="text-center mt-4 text-gray-400">© 2024 Trackademia</footer>
       </aside>
     )

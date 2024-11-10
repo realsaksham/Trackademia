@@ -135,3 +135,15 @@
 .dark .absent-btn:hover {
     background-color: #e3342f;
 }
+.attendance-chart-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .attendance-chart {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+  }
+  

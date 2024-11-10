@@ -41,7 +41,7 @@ const Header = ({ user, onLogout }) => {
         </Link>
 
         <Link to="/about" className="header-button">About</Link>
-        <button className="header-button">Contact</button>
+
 
         {!user ? (
           <Link to="/login" className="header-button">
