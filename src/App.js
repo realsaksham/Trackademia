@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Pomodoro from './components/Pomodoro';  // Import Pomodoro component
 import Header from './components/Header'; // Import your Header component
 
+// hello 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null); // Store user information
