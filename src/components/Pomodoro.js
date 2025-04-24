@@ -1,128 +1,131 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import pomodoroGif from '../assets/giphy.gif';
 
 const Pomodoro = () => {
-  const [minutes, setMinutes] = useState(25); // Default Pomodoro session length
+  const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(false); // Timer state
-  const [inputMinutes, setInputMinutes] = useState(25); // For input field to set time
-  const [inputSeconds, setInputSeconds] = useState(0); // For input field to set time
+  const [isActive, setIsActive] = useState(false);
+  const [workMinutes, setWorkMinutes] = useState(25);
+  const [breakMinutes, setBreakMinutes] = useState(5);
+  const [sessionType, setSessionType] = useState('Work');
+  const canvasRef = useRef(null);
 
-  const totalTimeInSeconds = inputMinutes * 60 + inputSeconds;
+  const totalTimeInSeconds = (sessionType === 'Work' ? workMinutes : breakMinutes) * 60;
   const remainingTimeInSeconds = minutes * 60 + seconds;
-  const progress = (remainingTimeInSeconds / totalTimeInSeconds) * 100;
+  const progress = remainingTimeInSeconds / totalTimeInSeconds;
+
+  const drawProgress = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const radius = canvas.width / 2;
+    const lineWidth = 12;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(radius, radius, radius - lineWidth, 0, Math.PI * 2);
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = '#111';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(
+      radius,
+      radius,
+      radius - lineWidth,
+      -Math.PI / 2,
+      -Math.PI / 2 + Math.PI * 2 * progress
+    );
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = '#9B59B6';
+    ctx.stroke();
+  };
+
+  useEffect(() => { drawProgress(); }, [remainingTimeInSeconds, sessionType]);
 
   useEffect(() => {
     let timer;
-
     if (isActive) {
       timer = setInterval(() => {
         if (seconds === 0) {
           if (minutes === 0) {
-            clearInterval(timer); // Timer ends when it reaches 0
-            alert('Pomodoro session complete!'); // Alert when timer ends
-          } else {
-            setMinutes(minutes - 1);
-            setSeconds(59);
-          }
-        } else {
-          setSeconds(seconds - 1);
-        }
+            clearInterval(timer);
+            const nextType = sessionType === 'Work' ? 'Break' : 'Work';
+            setSessionType(nextType);
+            setMinutes(nextType === 'Work' ? workMinutes : breakMinutes);
+            setSeconds(0);
+            setIsActive(false);
+          } else { setMinutes(m => m - 1); setSeconds(59); }
+        } else { setSeconds(s => s - 1); }
       }, 1000);
-    } else {
-      clearInterval(timer); // Clear timer when paused or stopped
     }
+    return () => clearInterval(timer);
+  }, [isActive, seconds, minutes, sessionType, workMinutes, breakMinutes]);
 
-    return () => clearInterval(timer); // Cleanup on unmount
-  }, [isActive, seconds, minutes]);
-
-  const handleStart = () => {
-    setMinutes(inputMinutes);
-    setSeconds(inputSeconds);
-    setIsActive(true);
+  const toggleTimer = () => {
+    if (!isActive && minutes === 0 && seconds === 0) {
+      setMinutes(sessionType === 'Work' ? workMinutes : breakMinutes);
+      setSeconds(0);
+    }
+    setIsActive(a => !a);
   };
 
-  const handleReset = () => {
-    setMinutes(inputMinutes);
-    setSeconds(inputSeconds);
-    setIsActive(false);
+  const handleReset = () => { setIsActive(false); setSessionType('Work'); setMinutes(workMinutes); setSeconds(0); };
+  const adjustMinutes = (type, delta) => {
+    if (type === 'Work') {
+      setWorkMinutes(m => Math.max(1, m + delta));
+      if (sessionType === 'Work' && !isActive) setMinutes(m => Math.max(1, m + delta));
+    } else {
+      setBreakMinutes(m => Math.max(1, m + delta));
+      if (sessionType === 'Break' && !isActive) setMinutes(m => Math.max(1, m + delta));
+    }
   };
 
   return (
-    <div className="pomodoro-container w-full max-w-xl mx-auto p-6 bg-gray-900 rounded-xl shadow-lg flex flex-col justify-center items-center gap-6">
-      <h2 className="text-3xl text-center font-bold text-purple-300">Pomodoro Timer</h2>
+    <div className="h-screen flex">
+      <div className="w-1/2 h-full bg-black flex flex-col justify-center items-center p-8 space-y-8">
+        <h2 className="text-4xl font-bold text-white animate-fadeInDown">{sessionType} Session</h2>
 
-      {/* Circular Progress */}
-      <div className="relative w-32 h-32">
-        <svg className="absolute transform -rotate-90" width="100%" height="100%" viewBox="0 0 36 36">
-          <circle
-            className="text-gray-700"
-            cx="18"
-            cy="18"
-            r="15.9"
-            strokeWidth="3"
-            fill="none"
-          />
-          <circle
-            className="text-[#F8B234]"  // Updated circle color
-            cx="18"
-            cy="18"
-            r="15.9"
-            strokeWidth="3"
-            fill="none"
-            strokeDasharray="100"
-            strokeDashoffset={100 - progress} // Adjust the offset dynamically
-            style={{ transition: 'stroke-dashoffset 1s ease' }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex justify-center items-center">
-          <span className="text-2xl font-bold text-white">
-            {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-          </span>
+        <div className="relative">
+          <canvas ref={canvasRef} width={240} height={240} />
+          <div className="absolute inset-0 flex items-center justify-center animate-scaleIn">
+            <span className="text-5xl text-white font-mono">
+              {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex space-x-12">
+          {['Work', 'Break'].map(type => (
+            <div key={type} className="flex flex-col items-center hover:scale-105 transition-transform">
+              <span className="text-white mb-2">{type} Minutes</span>
+              <div className="flex items-center space-x-4">
+                <button onClick={() => adjustMinutes(type, -1)}
+                  className="text-white text-2xl hover:opacity-70 transition-opacity">−</button>
+                <span className="text-white text-2xl font-semibold">
+                  {type === 'Work' ? workMinutes : breakMinutes}
+                </span>
+                <button onClick={() => adjustMinutes(type, 1)}
+                  className="text-white text-2xl hover:opacity-70 transition-opacity">+</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex space-x-8">
+          <button onClick={toggleTimer}
+            className="px-8 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-transform transform hover:scale-105">
+            {isActive ? 'Pause' : 'Start'}
+          </button>
+          <button onClick={handleReset}
+            className="px-8 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-transform transform hover:scale-105">
+            Reset
+          </button>
         </div>
       </div>
 
-      {/* Time Input */}
-      <div className="flex justify-center gap-4 mt-6">
-        <div className="flex flex-col items-center">
-          <label className="text-white text-lg">Set Minutes</label>
-          <input
-            type="number"
-            min="1"
-            value={inputMinutes}
-            onChange={(e) => setInputMinutes(Number(e.target.value))}
-            className="px-4 py-2 bg-gray-800 text-white rounded-lg text-center w-20"
-          />
-        </div>
-        <div className="flex flex-col items-center">
-          <label className="text-white text-lg">Set Seconds</label>
-          <input
-            type="number"
-            min="0"
-            max="59"
-            value={inputSeconds}
-            onChange={(e) => setInputSeconds(Number(e.target.value))}
-            className="px-4 py-2 bg-gray-800 text-white rounded-lg text-center w-20"
-          />
-        </div>
-      </div>
-
-      {/* Control Buttons */}
-      <div className="flex justify-center gap-6 mt-4">
-        {/* Start/Pause Button */}
-        <button
-          onClick={handleStart}
-          className="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg transition-transform transform hover:scale-105 hover:bg-purple-400 focus:outline-none"
-        >
-          {isActive ? 'Pause' : 'Start'}
-        </button>
-
-        {/* Reset Button */}
-        <button
-          onClick={handleReset}
-          className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg transition-transform transform hover:scale-105 hover:bg-gray-500 focus:outline-none"
-        >
-          Reset
-        </button>
+      <div className="w-1/2 h-full relative">
+        <img src={pomodoroGif} alt="Pomodoro GIF"
+          className="w-full h-full object-cover animate-pulseSlow" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black to-transparent" />
       </div>
     </div>
   );

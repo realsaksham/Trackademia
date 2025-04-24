@@ -10,6 +10,8 @@ import Courses from './Courses.js';
 import Attendence from './Attendence.js';
 import AssignmentAlert from './AssignmentAlert';
 import Card from './Card.js'; // Import the Card component
+import Pomodoro from './Pomodoro';
+
 
 const Home = () => {
   const [userName, setUserName] = useState('');
@@ -101,6 +103,12 @@ const Home = () => {
         return <Courses />;
       case 'Attendence':
         return <Attendence onAuraPointsUpdated={fetchAuraPoints} />;
+      case 'Pomodoro':
+          return (
+            <section>
+              <Pomodoro />
+            </section>
+          );
       case 'Home':
       default:
         return (
@@ -115,6 +123,7 @@ const Home = () => {
               <Card title="Assignments" onClick={() => setActiveSection('Assignments')} />
               <Card title="Courses" onClick={() => setActiveSection('Courses')} />
               <Card title="Attendence" onClick={() => setActiveSection('Attendence')} />
+              <Card title="Pomodoro" onClick={() => setActiveSection('Pomodoro')} />
             </div>
           </section>
         );
